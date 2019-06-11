@@ -3,7 +3,7 @@ package au.org.ala.biocache.hubs
 import grails.converters.JSON
 import grails.plugin.cache.CacheEvict
 import grails.plugin.cache.Cacheable
-
+import grails.web.servlet.mvc.GrailsParameterMap
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
@@ -434,10 +434,11 @@ class WebServicesService {
 
             send ContentType.URLENC, postParams
 
-            response.success = { resp ->
+            response.success = { resp, reader ->
                 log.debug "POST - response status: ${resp.statusLine}"
                 postResponse.statusCode = resp.statusLine.statusCode
                 postResponse.statusMsg = resp.statusLine.reasonPhrase
+                postResponse.responseBody = reader.text
                 //assert resp.statusLine.statusCode == 201
             }
 
@@ -453,6 +454,7 @@ class WebServicesService {
     }
 
     def JSONElement postJsonElements(String url, String jsonBody) {
+        log.debug "POST url = ${url}"
         HttpURLConnection conn = null
         def charEncoding = 'UTF-8'
         try {
@@ -470,12 +472,17 @@ class WebServicesService {
             wr.flush()
             def resp = conn.inputStream.text
             log.debug "fileid = ${conn.getHeaderField("fileId")}"
+            log.debug "response = ${resp}"
             //log.debug "resp = ${resp}"
             //log.debug "code = ${conn.getResponseCode()}"
             if (!resp && conn.getResponseCode() == 201) {
                 // Field guide code...
                 log.debug "field guide catch"
                 resp = "{fileId: \"${conn.getHeaderField("fileId")}\" }"
+            }
+            if (resp.isNumber()) {
+                // QID returns a number only, so make it JSON
+                resp = "{ \"qid\": ${resp} }"
             }
             wr.close()
             return JSON.parse(resp?:"{}")
@@ -505,5 +512,50 @@ class WebServicesService {
         def bin = new ByteArrayInputStream(bos.toByteArray())
         def ois = new ObjectInputStream(bin)
         return ois.readObject()
+    }
+
+    /**
+     * Convert a long GET request into a qid via the '/webportal/params/' POST service
+     *
+     * @param params
+     * @return
+     */
+    String postParamsForQid(GrailsParameterMap params) {
+        def url = "${grailsApplication.config.biocache.baseUrl}/webportal/params"
+        String[] fqs = params.list("fq") as String[]
+        String q = params.get("q")
+        String wkt = params.get("wkt")
+        String qc = params.get("qc")
+        List paramNames = ["q", "qc", "fq", "wkt", "lat", "lon", "radius"]
+        Map postParams = [:] // we'll populate this below and use as POST body
+        String qid = ""
+
+        paramNames.each { key ->
+            List vals = params.list(key)
+
+            if (vals.size() > 1) {
+                // array param
+                postParams[key] = vals
+                //jsonObj[key] = vals
+                vals.eachWithIndex { val, i ->
+                    jsonObj[ "${key}[${i}]" ] = val
+                }
+            } else if (vals.size() == 1) {
+                jsonObj[key] = vals[0]
+                postParams[key] = vals[0]
+            }
+        }
+
+        log.debug "jsonObj = ${jsonObj.toString()}"
+        //JSONObject postResponseJson = postJsonElements(url, jsonObj.toString())
+        Map postResponseMap = postFormData(url, postParams)
+
+        log.debug "postResponseMap = ${postResponseMap.toString()}"
+
+        if (postResponseMap.containsKey("responseBody")) {
+            qid = postResponseMap.get("responseBody")
+        }
+
+        qid
     }
 }

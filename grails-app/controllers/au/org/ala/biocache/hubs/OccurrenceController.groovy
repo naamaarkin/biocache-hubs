@@ -36,6 +36,7 @@ class OccurrenceController {
 
     def ENVIRO_LAYER = "el"
     def CONTEXT_LAYER = "cl"
+    int MAX_GET_SIZE = grailsApplication.config.getProperty("maxGetRequestParamsSize", int, 3000) // if not set use 3000
 
     def index() {
         redirect action: "search"
@@ -87,6 +88,17 @@ class OccurrenceController {
 
         if (!requestParams.q) {
             requestParams.q = "*:*"
+        }
+
+        log.debug "requestURI = ${request.queryString} || size = ${request.queryString.size()}"
+
+        if (request.queryString.size() > MAX_GET_SIZE) {
+            // query string is too long for downloads-plugin so we'll POST and use QID instead
+            String qid = webServicesService.postParamsForQid(params)
+
+            if (qid) {
+                redirect(action: "list", params: [q: "qid:${qid}"])
+            }
         }
 
         try {
