@@ -534,6 +534,46 @@ class OccurrenceTagLib {
     }
 
     /**
+     * Create a link for a userId and dataResourceUid combination
+     * E.g. <a href="${grailsApplication.config.sightings.baseUrl}/spotter/${record.raw.occurrence.userId}">${record.alaUserName}</a>
+     *
+     * @attr userName REQUIRED
+     * @attr userId
+     * @attr dataResourceUid REQUIRED
+     * @attr occurrenceId
+     * @attr openInNewWindow
+     */
+    def getLinkForUserId = { attrs ->
+        def userName = attrs.userName
+        def userId = attrs.userId
+        def dataResourceUid = attrs.dataResourceUid
+        String occurrenceId = attrs.occurrenceId
+        def url
+
+        if (userName) {
+            if (dataResourceUid == "dr364") {
+                // ALA sightings
+                url = "<a href=\"${grailsApplication.config.getProperty("sightings.baseUrl")}/spotter/${userId.encodeAsURL()}\">${userName}</a>"
+            } else if (dataResourceUid == "dr1411") {
+                // iNaturalist
+                url = "<a href=\"${grailsApplication.config.getProperty( "iNaturalist.baseUrl", "https://inaturalist.org")}/people/${userName.encodeAsURL()}\">${userName}</a>"
+            } else if (dataResourceUid == "dr360" && occurrenceId) {
+                // Flickr
+                // Munge occurrenceId to get the URL, as we don't have the user-name stored in biocache in order to generate it
+                // e.g. https://www.flickr.com/photos/dhobern/5466675452/ to https://www.flickr.com/photos/dhobern/
+                String flickId = occurrenceId.replaceAll("^https:\\/\\/www\\.flickr\\.com\\/photos\\/(.*?)\\/\\d+\\/", '$1')
+                url = "<a href=\"https://www.flickr.com/photos/${flickId}\">${userName}</a>"
+            } else {
+                url = userName // pass-through
+            }
+        } else if (userId) {
+            url = userId // pass-through
+        }
+
+        out << url
+    }
+
+    /**
      * Generate a compare record "row"
      *
      * @attr compareRecord REQUIRED
@@ -912,5 +952,18 @@ class OccurrenceTagLib {
         //log.debug "#occurrenceTableRow - sanitizedHtml = ${sanitizedHtml}"
 
         sanitizedHtml
+    }
+
+    /**
+     * Remove any text containing the apiKey value from the UI
+     *
+     * @attr message REQUIRED
+     */
+    def stripApiKey = { attrs, body ->
+        String message = attrs.message
+        String output = message.replaceAll(/apiKey=[a-z0-9_\-]*/, "")
+        log.warn "input = ${message}"
+        log.warn "output = ${output}"
+        out << output
     }
 }

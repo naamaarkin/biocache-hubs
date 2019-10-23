@@ -102,54 +102,6 @@ $(document).ready(function() {
         $('.nav-tabs a:first').tab('show');
     }
 
-    // Substitute LSID strings for tacon names in facet values for species
-    var guidList = [];
-    $("li.species_guid, li.genus_guid").each(function(i, el) {
-        guidList[i] = $(el).attr("id");
-    });
-
-    if (guidList.length > 0) {
-        // AJAX call to get names for LSIDs
-        // IE7< has limit of 2000 chars on URL so split into 2 requests
-        var guidListA = guidList.slice(0, 15) // first 15 elements
-        var jsonUrlA = BC_CONF.bieWebappUrl + "/species/namesFromGuids.json?guid=" + guidListA.join("&guid=") + "&callback=?";
-        $.getJSON(jsonUrlA, function(data) {
-            // set the name in place of LSID
-            $("li.species_guid, li.genus_guid").each(function(i, el) {
-                if (i < 15) {
-                    $(el).find("a").html("<i>"+data[i]+"</i>");
-                } else {
-                    return false; // breaks each loop
-                }
-            });
-        });
-
-        if (guidList.length > 15) {
-            var guidListB = guidList.slice(15)
-            var jsonUrlB = BC_CONF.bieWebappUrl + "/species/namesFromGuids.json?guid=" + guidListB.join("&guid=") + "&callback=?";
-            $.getJSON(jsonUrlB, function(data) {
-                // set the name in place of LSID
-                $("li.species_guid, li.genus_guid").each(function(i, el) {
-                    // skip forst 15 elements
-                    if (i > 14) {
-                        var k = i - 15;
-                        $(el).find("a").html("<i>"+data[k]+"</i>");
-                    }
-                });
-            });
-        }
-    }
-
-    // do the same for the selected facet
-    var selectedLsid = $("b.species_guid").attr("id");
-    if (selectedLsid) {
-        var jsonUrl2 = BC_CONF.bieWebappUrl + "/species/namesFromGuids.json?guid=" + selectedLsid + "&callback=?";
-        $.getJSON(jsonUrl2, function(data) {
-            // set the name in place of LSID
-            $("b.species_guid").html("<i>"+data[0]+"</i>");
-        });
-    }
-
     // remove *:* query from search bar
     //var q = $.url().param('q');
     var q =  $.url().param('q');
@@ -256,7 +208,7 @@ $(document).ready(function() {
         var index = i; // keep a copy
         var queryContextParam = (BC_CONF.queryContext) ? "&qc=" + BC_CONF.queryContext : "";
         var jsonUri = BC_CONF.biocacheServiceUrl + "/occurrences/search.json?q=lsid:" + lsid + "&" + BC_CONF.facetQueries +
-            "&facets=raw_taxon_name&pageSize=0&flimit=" + maxFacets + queryContextParam + "&callback=?";
+            "&facets=raw_taxon_name&pageSize=0&flimit=" + maxFacets + queryContextParam;
 
         var $clone = $('#resultsReturned #template').clone();
         $clone.attr("id",""); // remove the ID
@@ -293,13 +245,9 @@ $(document).ready(function() {
                 synList1 += "[no records found]";
             }
 
-            //synList1 += "</div>";
-
             if (synListSize >= maxFacets) {
                 synList1 += "<div><br>Only showing the first " + maxFacets + " names<br>See the \"Scientific name (unprocessed)\" section in the \"Refine results\" column on the left for a complete list</div>";
             }
-
-//            synList += "</div>";
 
             $clone.find('div.rawTaxaList').html(synList1);
             $clone.removeClass("hide");
@@ -308,21 +256,8 @@ $(document).ready(function() {
                 e.stopPropagation();
             });
 
-//            $("#rawTaxonSearchForm").append(synList);
-            // position it under the drop down
-//            $("#refineTaxaSearch_"+i).position({
-//                my: "right top",
-//                at: "right bottom",
-//                of: $(el), // or this
-//                offset: "0 -1",
-//                collision: "none"
-//            });
-//            $("#refineTaxaSearch_"+i).hide();
         });
-        // format display with drop-down
-        //$("span.lsid").before("<span class='plain'> which matched: </span>");
-//        $(el).html("<a href='#' title='click for details about this taxon search' id='lsid_" + i + "'>" + nameString + "</a>");
-//        $(el).addClass("dropDown");
+
         $(el).html($clone);
     });
 
@@ -350,7 +285,7 @@ $(document).ready(function() {
     });
 
     // load more images button
-    $("#loadMoreImages .btn").live("click", function(e) {
+    $("#loadMoreImages .btn").on("click", function(e) {
         e.preventDefault();
         $(this).addClass('disabled');
         $(this).find('img').show(); // turn on spinner
@@ -360,7 +295,7 @@ $(document).ready(function() {
     });
 
     // load more species images button
-    $("#loadMoreSpecies").live("click", function(e) {
+    $("#loadMoreSpecies").on("click", function(e) {
         e.preventDefault();
         var start = $("#speciesGallery").data('count');
         var group = $("#speciesGroup :selected").val();
@@ -370,7 +305,7 @@ $(document).ready(function() {
     });
 
     // species tab -> species group drop down
-    $("#speciesGroup, #speciesGallerySort").live("change", function(e) {
+    $("#speciesGroup, #speciesGallerySort").on("change", function(e) {
         var group = $("#speciesGroup :selected").val();
         var sort = $("#speciesGallerySort :selected").val();
         loadSpeciesInTab(0, sort, group);
@@ -407,19 +342,19 @@ $(document).ready(function() {
         loadMoreFacets(facetName, displayName, null);
     });
 
-    $('#multipleFacets').on('hidden', function () {
+    $('#multipleFacets').on('hidden.bs.modal', function () {
         // clear the tbody content
         $("tbody.scrollContent tr").not("#spinnerRow").remove();
     });
 
-    $("#downloadFacet").live("click", function(e) {
+    $("#downloadFacet").on("click", function(e) {
         var facetName = $("table#fullFacets").data("facet");
         //console.log('clicked ' + window.location.href );
         window.location.href = BC_CONF.biocacheServiceUrl + "/occurrences/facets/download" + BC_CONF.facetDownloadQuery + '&facets=' + facetName + '&count=true&lookup=true';
     });
 
     // form validation for form#facetRefineForm
-    $("#submitFacets :input.submit").live("click", function(e) {
+    $("#submitFacets :input.submit").on("click", function(e) {
         e.preventDefault();
         var inverseModifier = ($(this).attr('id') == 'exclude') ? "-" : "";
         var fqArray = [];
@@ -469,7 +404,7 @@ $(document).ready(function() {
     });
 
     // Drop-down option on facet popup div - for wildcard fq searches
-    $('#submitFacets a.wildcard').live('click', function(e) {
+    $('#submitFacets a.wildcard').on('click', function(e) {
         e.preventDefault();
         var link = this;
         var inverseModifier = ($(link).attr('id').indexOf('exclude') != -1) ? "-" : "";
@@ -493,7 +428,7 @@ $(document).ready(function() {
     });
 
     // maultiple facets popup - sortable column heading links
-    $("a.fsort").live("click", function(e) {
+    $("a.fsort").on("click", function(e) {
         e.preventDefault();
         var fsort = $(this).data('sort');
         var foffset = $(this).data('foffset');
@@ -510,7 +445,7 @@ $(document).ready(function() {
     });
 
     // loadMoreValues (legacy - now handled by inview)
-    $("a.loadMoreValues").live("click", function(e) {
+    $("#multipleFacets").on("click", "a.loadMoreValues", function(e) {
         e.preventDefault();
         var link = $(this);
         var fsort = link.data('sort');
@@ -524,7 +459,7 @@ $(document).ready(function() {
     });
 
     // Inview trigger to load more values when tr comes into view
-    $("tr#loadMore").live("inview", function() {
+    $("#multipleFacets").on("inview", "tr#loadMore", function() {
         var link = $(this).find("a.loadMoreValues");
         //console.log("inview", link);
         var fsort = link.data('sort');
@@ -964,7 +899,7 @@ function loadImages(start) {
 
         start = (start) ? start : 0;
         var imagesJsonUri = BC_CONF.biocacheServiceUrl + "/occurrences/search.json" + BC_CONF.searchString +
-            "&fq=multimedia:Image&facet=false&pageSize=20&start=" + start + "&sort=identification_qualifier_s&dir=asc&callback=?";
+            "&fq=multimedia:Image&facet=false&pageSize=20&start=" + start + "&sort=identification_qualifier_s&dir=asc";
         $.getJSON(imagesJsonUri, function (data) {
             //console.log("data",data);
             if (data.occurrences && data.occurrences.length > 0) {
@@ -1054,7 +989,7 @@ function loadSpeciesInTab(start, sortField, group) {
 
     if (!init) {
         // populate the groups dropdown
-        var groupsUrl = BC_CONF.biocacheServiceUrl + "/explore/groups.json" + BC_CONF.searchString + "&facets=species_group&callback=?";
+        var groupsUrl = BC_CONF.biocacheServiceUrl + "/explore/groups.json" + BC_CONF.searchString + "&facets=species_group";
         $.getJSON(groupsUrl, function(data) {
             if (data.length > 0) {
                 $("#speciesGroup").empty();
@@ -1271,7 +1206,7 @@ function loadFacetsContent(facetName, fsort, foffset, facetLimit, replaceFacets)
         // so default facet sorting is used in initial loading
         jsonUri += "&fsort=" + fsort;
     }
-    jsonUri += "&callback=?"; // JSONP trigger
+    //jsonUri += "&callback=?"; // JSONP trigger
 
     $.getJSON(jsonUri, function(data) {
         //console.log("data",data);
@@ -1285,8 +1220,8 @@ function loadFacetsContent(facetName, fsort, foffset, facetLimit, replaceFacets)
                 $("table#fullFacets tr").not("tr.tableHead").not("#spinnerRow").remove();
             }
             $.each(data.facetResults[0].fieldResult, function(i, el) {
-                //console.log("0. facet", el);
-                if (el.count > 0) {
+                console.log("0. facet", el);
+                if (el.count > 0 && i != facetLimit - 1) {
 
                     // surround with quotes: fq value if contains spaces but not for range queries
                     var fqEsc = ((el.label.indexOf(" ") != -1 || el.label.indexOf(",") != -1 || el.label.indexOf("lsid") != -1) && el.label.indexOf("[") != 0)
