@@ -56,6 +56,7 @@ class OccurrenceController {
      */
     def list(SpatialSearchRequestParams requestParams) {
         def start = System.currentTimeMillis()
+        String qid
         requestParams.fq = params.list("fq") as String[] // override Grails binding which splits on internal commas in value
 
         if (!params.pageSize) {
@@ -94,11 +95,11 @@ class OccurrenceController {
 
         if (request.queryString.size() > MAX_GET_SIZE) {
             // query string is too long for downloads-plugin so we'll POST and use QID instead
-            String qid = webServicesService.postParamsForQid(params)
+            qid = webServicesService.postParamsForQid(params)
 
-            if (qid) {
-                redirect(action: "list", params: [q: "qid:${qid}"])
-            }
+//            if (qid) {
+//                redirect(action: "list", params: [q: "qid:${qid}"])
+//            }
         }
 
         try {
@@ -178,6 +179,7 @@ class OccurrenceController {
                     userId: authService?.getUserId(),
                     userEmail: authService?.getEmail(),
                     processingTime: (System.currentTimeMillis() - start),
+                    qid: qid,
                     wsTime: wsTime
             ]
 

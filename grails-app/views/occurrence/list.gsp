@@ -50,6 +50,7 @@
             resourceName: "${grailsApplication.config.skin.orgNameLong}",
             facetLimit: "${grailsApplication.config.facets.limit ?: 50}",
             queryContext: "${grailsApplication.config.biocache.queryContext}",
+            qid: "${qid}",
             selectedDataResource: "${selectedDataResource}",
             autocompleteHints: ${grailsApplication.config.bie?.autocompleteHints?.encodeAsJson() ?: '{}'},
             zoomOutsideScopedRegion: Boolean("${grailsApplication.config.map.zoomOutsideScopedRegion}"),
