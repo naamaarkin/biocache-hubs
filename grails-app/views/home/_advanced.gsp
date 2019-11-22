@@ -157,7 +157,7 @@
                 <select class="basis_of_record form-control" name="basis_of_record" id="basis_of_record">
                     <option value=""><g:message code="advancedsearch.table08col01.option.label" default="-- select a basis of record --"/></option>
                     <g:each var="bor" in="${request.getAttribute("basis_of_record")}">
-                        <option value="${bor.key}"><g:message code="${bor.value}"/></option>
+                        <option value="${bor.key}"><alatag:message code="${bor.value}"/></option>
                     </g:each>
                 </select>
             </div>

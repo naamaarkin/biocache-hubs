@@ -72,6 +72,14 @@ class AdvancedSearchParams implements Validateable {
     String end_year = ""
     String collector_text = ""
 
+    static constraints = {
+        type_material blank: false
+    }
+
+    static boolean defaultNullable() {
+        true
+    }
+
     private final String QUOTE = "\""
     private final String BOOL_OP = "AND"
 

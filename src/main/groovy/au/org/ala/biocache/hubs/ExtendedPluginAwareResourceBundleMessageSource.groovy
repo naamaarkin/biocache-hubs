@@ -14,12 +14,7 @@
  */
 package au.org.ala.biocache.hubs
 
-import grails.util.CacheEntry
 import org.grails.spring.context.support.PluginAwareResourceBundleMessageSource
-import org.springframework.beans.factory.annotation.Autowired
-
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
 
 /**
  * Extend PluginAwareResourceBundleMessageSource so we can access the (protected)

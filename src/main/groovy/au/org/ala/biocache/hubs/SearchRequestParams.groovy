@@ -42,6 +42,14 @@ public class SearchRequestParams implements Validateable{
     /** To disable facets */
     Boolean facet = true
 
+    static constraints = {
+        start blank: false
+    }
+
+    static boolean defaultNullable() {
+        true
+    }
+
     /**
      * Custom toString method to produce a String to be used as the request parameters
      * for the Biocache Service webservices

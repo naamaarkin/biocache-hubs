@@ -15,46 +15,29 @@
 
 package au.org.ala.biocache.hubs
 
+import au.org.ala.web.AlaSecured
+
 /**
  * Admin functions - should be protected by login and ROLE_ADMIN or equiv.
  */
 class AdminController {
     def facetsCacheService, authService, webServicesService
     def messageSourceCacheService
-    def beforeInterceptor = [action:this.&auth]
+    // beforeInterceptor was removed from Grails 3, @AlaSecured("ROLE_ADMIN") used instead
 
-    /**
-     * Before interceptor to check for roles
-     *
-     * @return
-     */
-    private auth() {
-        if (!grailsApplication.config.security.cas.casServerName && grailsApplication.config.security.cas.bypass) {
-            // Standard Grails config - bypass
-            true
-        } else if (!grailsApplication.config.casServerName && grailsApplication.config.disableCAS) {
-            // External config - bypass
-            true
-        } else if (!authService?.userInRole(grailsApplication.config.auth.admin_role)) {
-            log.debug "User not authorised to access the page: ${params.controller}/${params.action?:''}. Redirecting to index."
-            flash.message = "You are not authorised to access the page: ${params.controller}/${params.action?:''}."
-            redirect(controller: "home", action: "index")
-            false
-        } else {
-            true
-        }
-    }
-
+    @AlaSecured("ROLE_ADMIN")
     def index() {
         // [ message: "not used" ]
     }
 
+    @AlaSecured("ROLE_ADMIN")
     def clearAllCaches() {
         def message = doClearAllCaches()
         flash.message = message.replaceAll("\n","<br/>")
         redirect(action:'index')
     }
 
+    @AlaSecured("ROLE_ADMIN")
     private String doClearAllCaches() {
         def message = "Clearing all caches...\n"
         message += webServicesService.doClearCollectoryCache()
@@ -64,31 +47,37 @@ class AdminController {
         message
     }
 
+    @AlaSecured("ROLE_ADMIN")
     def clearCollectoryCache() {
         flash.message = webServicesService.doClearCollectoryCache()
         redirect(action:'index')
     }
 
+    @AlaSecured("ROLE_ADMIN")
     def clearLongTermCache() {
         flash.message = webServicesService.doClearLongTermCache()
         redirect(action:'index')
     }
 
+    @AlaSecured("ROLE_ADMIN")
     def clearFacetsCache() {
         flash.message = doClearFacetsCache()
         redirect(action:'index')
     }
 
+    @AlaSecured("ROLE_ADMIN")
     def clearPropertiesCache() {
         flash.message = doClearPropertiesCache()
         redirect(action:'index')
     }
 
+    @AlaSecured("ROLE_ADMIN")
     def doClearFacetsCache() {
         facetsCacheService.clearCache()
         "facetsCache cache cleared\n"
     }
 
+    @AlaSecured("ROLE_ADMIN")
     def doClearPropertiesCache() {
         messageSourceCacheService.clearMessageCache()
         "i18n messages cache cleared\n"

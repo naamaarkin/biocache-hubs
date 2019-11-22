@@ -36,7 +36,8 @@
         <g:each var="group" in="${groupedFacets}">
             <g:set var="keyCamelCase" value="${group.key.replaceAll(/\s+/,'')}"/>
             <div class="facetGroupName" id="heading_${keyCamelCase}">
-                <a href="#" class="showHideFacetGroup" data-name="${keyCamelCase}"><span class="caret right-caret"></span> <g:message code="facet.group.${group.key}" default="${group.key}"/></a>
+                <a href="#" class="showHideFacetGroup" data-name="${keyCamelCase}"><span class="caret right-caret"></span>
+                   ${group.key}</a>
             </div>
             <div class="facetsGroup" id="group_${keyCamelCase}" style="display:none;">
                 <g:set var="firstGroup" value="${false}"/>
