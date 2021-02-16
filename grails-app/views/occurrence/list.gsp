@@ -707,24 +707,24 @@
                                 <select id="sort" name="sort" class="input-small">
                                     <option value="score" <g:if test="${params.sort == 'score'}">selected</g:if>><g:message
                                             code="list.sortwidgets.sort.option01" default="Best match"/></option>
-                                    <option value="taxon_name"
-                                            <g:if test="${params.sort == 'taxon_name'}">selected</g:if>><g:message
-                                            code="list.sortwidgets.sort.option02" default="Taxon name"/></option>
-                                    <option value="common_name"
-                                            <g:if test="${params.sort == 'common_name'}">selected</g:if>><g:message
+                                    <option value="scientificName"
+                                            <g:if test="${params.sort == 'scientificName'}">selected</g:if>><g:message
+                                            code="list.sortwidgets.sort.option02" default="Scientific name"/></option>
+                                    <option value="vernacularName"
+                                            <g:if test="${params.sort == 'vernacularName'}">selected</g:if>><g:message
                                             code="list.sortwidgets.sort.option03" default="Common name"/></option>
-                                    <option value="occurrence_date"
-                                            <g:if test="${params.sort == 'occurrence_date'}">selected</g:if>>${skin == 'avh' ? g.message(code: "list.sortwidgets.sort.option0401", default: "Collecting date") : g.message(code: "list.sortwidgets.sort.option0402", default: "Record date")}</option>
+                                    <option value="eventDate"
+                                            <g:if test="${params.sort == 'eventDate'}">selected</g:if>>${skin == 'avh' ? g.message(code: "list.sortwidgets.sort.option0401", default: "Collecting date") : g.message(code: "list.sortwidgets.sort.option0402", default: "Record date")}</option>
                                     <g:if test="${skin != 'avh'}">
-                                        <option value="record_type"
-                                                <g:if test="${params.sort == 'record_type'}">selected</g:if>><g:message
+                                        <option value="basisOfRecord"
+                                                <g:if test="${params.sort == 'basisOfRecord'}">selected</g:if>><g:message
                                                 code="list.sortwidgets.sort.option05" default="Record type"/></option>
                                     </g:if>
-                                    <option value="first_loaded_date"
-                                            <g:if test="${(!params.sort) || params.sort == 'first_loaded_date'}">selected</g:if>><g:message
+                                    <option value="firstLoadedDate"
+                                            <g:if test="${(!params.sort) || params.sort == 'firstLoadedDate'}">selected</g:if>><g:message
                                             code="list.sortwidgets.sort.option06" default="Date added"/></option>
                                     <option value="last_assertion_date"
-                                            <g:if test="${params.sort == 'last_assertion_date'}">selected</g:if>><g:message
+                                            <g:if test="${params.sort == 'lastAssertionDate'}">selected</g:if>><g:message
                                             code="list.sortwidgets.sort.option07" default="Last annotated"/></option>
                                 </select>&nbsp;
                             <g:message code="list.sortwidgets.dir.label" default="order"/>:

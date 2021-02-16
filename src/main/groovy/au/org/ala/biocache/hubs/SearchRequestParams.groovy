@@ -38,7 +38,7 @@ class SearchRequestParams implements Validateable{
     Integer offset // grails version of start
     Integer pageSize = 20
     Integer max // grails version of pageSize
-    String sort = "first_loaded_date"
+    String sort = "firstLoadedDate"
     String dir = "desc"
     String order // grails version of dir
     String displayString
