@@ -24,7 +24,7 @@
 table#cellCountsLegend {
     margin: 0;
     /*    margin-top: 20px !important;*/
-    float: right;
+    float: inline-end;
     width: 100%;
     border: none;
 }
@@ -53,7 +53,7 @@ table#cellCountsLegend {
 }
 
 #taxaBox div#rightList {
-    float: left;
+    float: inline-start;
     width: 66%;
     padding: 0;
     margin: 0;
@@ -67,7 +67,7 @@ table#cellCountsLegend {
 }
 #taxaBox #leftList {
     width: 33%;
-    float: left;
+    float: inline-start;
 }
 #taxaBox td, #taxaBox th {
     padding:1px 5px;
@@ -77,20 +77,20 @@ table#cellCountsLegend {
     border-top:2px solid #d9d9d9;
 }
 #taxaBox th {
-    text-align: left;
+    text-align: start;
     line-height: 22px;
 }
 #taxaBox thead tr {
     border-bottom:2px solid #d9d9d9;
 }
 #taxaBox td.indent1 {
-    padding-left: 10px;
+    padding-inline-start: 10px;
 }
 #taxaBox td.indent2 {
-    padding-left: 15px;
+    padding-inline-start: 15px;
 }
 #taxaBox td.indent3 {
-    padding-left: 20px;
+    padding-inline-start: 20px;
 }
 
 #rightList tbody  {
@@ -132,11 +132,11 @@ table#cellCountsLegend {
     width: 5%;
 }
 #rightList .sciName {
-    text-align: left;
+    text-align: start;
     width: 50%;
 }
 #rightList .rightCounts {
-    padding-right: 5px;
+    padding-inline-end: 5px;
     width:10%;
 }
 .activeRow {
