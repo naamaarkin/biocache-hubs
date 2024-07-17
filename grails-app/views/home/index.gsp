@@ -303,7 +303,7 @@
 <body>
     <div id="headingBar" class="heading-bar">
         <h1 style="width:100%;" id="searchHeader"><g:message code="home.index.body.title"
-                                                             default="Search for records in"/> ${raw(hubDisplayName)}</h1>
+                                                             default="Search for records"/></h1>
     </div>
     <g:if test="${flash.message}">
         <div class="message alert alert-info alert-dismissable">
