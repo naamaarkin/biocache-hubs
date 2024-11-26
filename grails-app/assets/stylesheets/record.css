@@ -46,10 +46,10 @@ div.recordHeader {
     /*height: 100px;*/
 }
 #headingBar .left {
-    float: left;
+    float: inline-start;
 }
 #headingBar .right {
-    float: right;
+    float: inline-end;
 }
 #headingBar .centre {
     overflow: hidden;
@@ -90,18 +90,18 @@ table.occurrenceTable {
 }
 
 .glyphicon {
-    margin-right: 4px;
+    margin-inline-end: 4px;
 }
 
 td.annoText {
     width: 24px;
 }
 #headingBar #jsonLink {
-    float:right;
+    float:inline-end;
     width: 200px;
     font-size: 11px;
     vertical-align: bottom;
-    text-align: right;
+    text-align: end;
     line-height: 1.2em;
     color: #555;
 }
@@ -140,7 +140,7 @@ h1 span#recordId {
 #institutionLogo {
     max-width: 250px;
     max-height: 100px;
-    padding-right: 15px;
+    padding-inline-end: 15px;
 }
 #recordHeadingLine2 {
     font-size: 16px;
@@ -189,7 +189,7 @@ td.noStripe {
 }
 
 .inner td.label {
-    text-align: right;
+    text-align: end;
 }
 
 .grey-bg {
@@ -206,7 +206,7 @@ table.inner td:first-child {
 }
 
 td.dwc {
-    text-align: right;
+    text-align: end;
     white-space: nowrap;
 }
 
@@ -238,7 +238,7 @@ div.sidebar > button.rounded {
 }
 
 div#backButton {
-    float: right;
+    float: inline-end;
     display: inline-block;
     font-size: 13px;
     font-weight: bold;
@@ -356,8 +356,8 @@ li.userAnnotationTemplate { list-style: none; }
 .popover-title .close {
     font-size: 24px;
     margin-top: -4px;
-    margin-left: 5px;
-    margin-right: -5px;
+    margin-inline-start: 5px;
+    margin-inline-end: -5px;
 }
 
 .dataQualityHelpLink {
@@ -390,6 +390,7 @@ div.audiojs div.time {
 
 #outlierFeedback #inferredOccurrenceDetails {
     clear: both;
+    margin-inline-start: 20px;
     margin-top: 30px;
     width: 100%;
 }

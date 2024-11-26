@@ -93,7 +93,7 @@ form {
 
 .rawTaxonSumbit {
     display: inline-block;
-    float: right;
+    float: inline-end;
     margin-top: 5px;
 }
 
@@ -210,7 +210,7 @@ form {
 }
 
 .nav-tabs li a {
-    margin-right: 5px;
+    margin-inline-end: 5px;
 }
 
 .nav-tabs li:not(.active) a {
@@ -484,6 +484,7 @@ div#currentFilter {
 
 #sortWidgets select, #mapLayerControls select {
     padding:0;
+    background-position: calc(10% - 20px) calc(50% + 2px), calc(10% - 16px) calc(50% + 2px);
 }
 #searchNavBar {
     text-align: center;
@@ -824,11 +825,11 @@ table.avhRowB  td.viewRecord {
 }
 span.FieldName {
     font-weight: bold;
-    float:left;
+    float:inline-start;
 }
 img.optionsIcon {
     vertical-align: middle;
-    float: left;
+    float: inline-start;
     padding:0 0 2px 5px;
 }
 
@@ -1156,7 +1157,7 @@ a.leaflet-control-zoom-fullscreen + a.leaflet-control-zoom-fullscreen {
 }
 
 .DQPrefSettingsLink {
-    float: right;
+    float: inline-end;
 }
 
 .DQPrefSettingsLink span {
